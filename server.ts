@@ -3,6 +3,7 @@ import { createServer as createViteServer } from "vite";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import path from "path";
+import fs from "fs";
 
 async function startServer() {
   const app = express();
@@ -84,9 +85,12 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, { index: false }));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      let html = fs.readFileSync(path.join(distPath, 'index.html'), 'utf-8');
+      const apiKey = process.env.GEMINI_API_KEY || '';
+      html = html.replace('<head>', `<head><script>window.ENV = { GEMINI_API_KEY: "${apiKey}" };</script>`);
+      res.send(html);
     });
   }
 

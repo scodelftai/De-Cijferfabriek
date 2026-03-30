@@ -676,7 +676,8 @@ function ArenaPhase({ roomId, roomData, myRole }: { roomId: string, roomData: Ro
   const askSpindoctor = async () => {
     setIsAsking(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = (window as any).ENV?.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const prompt = `Je bent een keiharde, strategische politieke spindoctor in een rollenspel over onderwijsbeleid. 
       Mijn rol is: ${roleNames[myRole as string]}.
       Huidige voorstellen van iedereen:
@@ -869,7 +870,8 @@ function VotingPhase({ roomId, roomData, myRole }: { roomId: string, roomData: R
   const generateHeadline = async () => {
     setIsGenerating(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = (window as any).ENV?.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const passed = !roomData.lawRejected;
       const prompt = `Schrijf een sensationele, realistische krantenkop (max 15 woorden) voor de voorpagina van een Nederlandse krant over de nieuwe onderwijswet.
       De wet is ${passed ? 'AANGENOMEN' : 'AFGEWEZEN'}.
@@ -1082,7 +1084,8 @@ function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const apiKey = (window as any).ENV?.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+    const ai = new GoogleGenAI({ apiKey: apiKey });
     chatRef.current = ai.chats.create({
       model: "gemini-3-flash-preview",
       config: {
