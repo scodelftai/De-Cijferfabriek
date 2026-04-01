@@ -531,11 +531,14 @@ function GameDashboard({ roomId, roomData, myRole, userId }: { roomId: string, r
           <div className="p-6 border-b border-slate-100 bg-slate-50">
             <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2"><Landmark className="w-4 h-4" /> Tussenstand</h3>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between items-center"><span className="text-slate-600">LAKS</span><span className="font-bold text-slate-800">{getScore('laks')}</span></div>
-              <div className="flex justify-between items-center"><span className="text-slate-600">Ouders</span><span className="font-bold text-slate-800">{getScore('parents')}</span></div>
-              <div className="flex justify-between items-center"><span className="text-slate-600">Bijles</span><span className="font-bold text-slate-800">{getScore('tutors')}</span></div>
-              <div className="flex justify-between items-center"><span className="text-slate-600">Docenten</span><span className="font-bold text-slate-800">{getScore('teachers')}</span></div>
-              <div className="flex justify-between items-center"><span className="text-slate-600">Minister</span><span className="font-bold text-slate-800">{getScore('minister')}</span></div>
+              {(['laks', 'parents', 'tutors', 'teachers', 'minister'] as const).map((role) => (
+                <div key={role} className="flex justify-between items-center">
+                  <span className="text-slate-600">{roleNames[role]}</span>
+                  <span className="font-bold text-slate-800">
+                    {role === myRole || roomData.status === 'finished' ? getScore(role) : '???'}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
           {myRole && (
